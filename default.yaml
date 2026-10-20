@@ -1,0 +1,226 @@
+# AI Image Detector Configuration
+
+# Data settings
+data:
+  root_dir: "/workspace/data/processed"
+  datasets:
+    - name: "cnndetection"
+      metadata: "cnndetection/cnndetection_metadata.csv"
+      architecture_type: "gan"
+    - name: "diffusionforensics"
+      metadata: "diffusionforensics/metadata.csv"
+      architecture_type: "diffusion"
+    - name: "cifake"
+      metadata: "cifake/cifake_metadata.csv"
+      architecture_type: "diffusion"
+    - name: "synthbuster"
+      metadata: "synthbuster/synthbuster_metadata.csv"
+      architecture_type: "diffusion"
+  
+  # Image settings
+  image_size: 256
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std: [0.229, 0.224, 0.225]
+  
+  # Family-level OOD split. All GAN fake images are used for training and all
+  # diffusion fake images are held out for testing.
+  split:
+    level: "family"
+    experiment_name: "gan_to_diffusion"
+    train_families: ["gan"]
+    test_families: ["diffusion"]
+    # CNNDetection also contains non-GAN CNN restoration, IMLE, and DeepFake
+    # families. They are excluded from the primary GAN-vs-diffusion study.
+    exclude_families: ["cnn", "implicit_generative", "face_manipulation"]
+    # family_matched keeps each dataset's real images with that dataset's fake
+    # family. This is a strict domain transfer, but family and dataset source
+    # are confounded because the current datasets do not contain both families.
+    real_strategy: "family_matched"  # family_matched or random
+    real_test_fraction: 0.2          # used only by random
+
+  # Legacy generator-level OOD lists. Used only when data.split.level=model.
+  train_models:
+    gan:
+      - "progan"
+      - "stylegan"
+      - "biggan"
+      - "cyclegan"
+      - "stargan"
+      - "gaugan"
+      - "deepfake"
+    diffusion:
+      - "ddpm"
+      - "iddpm"
+      - "ldm"
+      - "pndm"
+      - "sdv1"
+      - "sdv1_new1"
+      - "stable_diffusion_v14"   # CIFAKE fake
+
+  test_models:
+    gan:
+      - "stylegan2"
+      - "seeingdark"
+      - "san"
+      - "crn"
+      - "imle"
+      - "sitd"
+      - "whichfaceisreal"
+    diffusion:
+      - "sdv2"
+      - "sdv1_new2"
+      - "adm"
+      - "dalle2"
+      - "midjourney"
+      - "if"
+      - "vqdiffusion"
+      - "firefly"       # SynthBuster
+      - "sd_14"         # SynthBuster
+      - "sd_2"          # SynthBuster
+      - "sd_xl"         # SynthBuster
+      - "wukong"        # SynthBuster
+  
+  # Sampling and balancing
+  balance_classes: true
+  samples_per_class: null  # null = use all available
+  val_split: 0.1
+  weighted_sampling: true
+  augmentation:
+    transforms:
+      flip:
+        enabled: true
+        p: 0.5
+      rotate:
+        enabled: true
+        p: 0.3
+      color:
+        enabled: true
+        p: 0.4
+        factor: 0.2
+      blur:
+        enabled: true
+        p: 0.3
+        sigma_range: [0.3, 2.0]
+      jpeg:
+        enabled: true
+        p: 0.5
+        quality_range: [45, 95]
+      resize_artifact:
+        enabled: true
+        p: 0.5
+        scale_range: [0.45, 0.9]
+      noise:
+        enabled: false
+        p: 0.0
+        std_range: [1.0, 6.0]
+  
+  # DataLoader settings
+  batch_size: 32
+  num_workers: 8
+  pin_memory: true
+
+# Model settings
+model:
+  # RGB branch (Swin Transformer)
+  rgb_branch:
+    model_name: "microsoft/swin-tiny-patch4-window7-224"
+    pretrained: true
+    feature_dim: 512
+  
+  # Frequency branch (ResNet)
+  frequency_branch:
+    input_channels: 1
+    feature_dim: 256
+    resnet_type: "resnet18"
+    pretrained: true
+  
+  # Noise branch (ResNet)
+  noise_branch:
+    num_srm_filters: 3
+    feature_dim: 256
+    resnet_type: "resnet18"
+    pretrained: true
+  
+  # Fusion settings
+  fusion:
+    type: "attention"  # options: concatenate, attention, cross_attention, gated_fusion
+    hidden_dim: 512
+    num_heads: 8
+    dropout: 0.3
+
+  # Ablation settings. Defaults preserve the existing architecture:
+  # branches -> feature norm -> DIL cosine similarities -> fusion -> classifier
+  dil:
+    use_dil: true
+
+  normalization:
+    use_norm_a: true   # feature-level normalization after branch extraction
+    use_norm_b: false  # optional fusion-level normalization after fusion
+
+  ood:
+    use_adapters: false
+    adapter_bottleneck_dim: 128
+  
+  # Classification head
+  classifier:
+    hidden_dims: [256, 128]
+    dropout: 0.5
+    num_classes: 2
+
+# Training settings
+training:
+  epochs: 50
+  learning_rate: 1e-4
+  weight_decay: 1e-5
+  
+  # Optimizer
+  optimizer: "adamw"
+  betas: [0.9, 0.999]
+  
+  # Scheduler
+  scheduler: "cosine"
+  warmup_epochs: 5
+  min_lr: 1e-6
+  
+  # Mixed precision
+  use_amp: true
+  
+  # Gradient settings
+  gradient_clip: 1.0
+  accumulation_steps: 1
+  
+  # Early stopping
+  early_stopping:
+    patience: 10
+    min_delta: 0.001
+    monitor: "val_auc"
+  
+  # Checkpointing
+  checkpoint_dir: "./checkpoints"
+  save_best_only: true
+  save_freq: 5
+  threshold_metric: "balanced_accuracy"
+
+# Evaluation settings
+evaluation:
+  metrics:
+    - "accuracy"
+    - "auc"
+    - "precision"
+    - "recall"
+    - "f1"
+  per_architecture: true
+  generate_confusion_matrix: true
+  generate_roc_curve: true
+
+# Logging
+logging:
+  level: "INFO"
+  tensorboard_dir: "./runs"
+  log_freq: 100  # steps
+
+# Random seed for reproducibility
+seed: 42
+
+# Device settings
+device: "cuda"  # cuda, cpu, or mps
