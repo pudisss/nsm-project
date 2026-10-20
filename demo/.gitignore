@@ -56,21 +56,10 @@ dist/
 Thumbs.db
 Desktop.ini
 
-# Code-only publication: private notes and AI assistant artifacts
+# Private documentation
 *.md
 *.mdx
 *.markdown
-.agents/
-.claude/
-.codex/
-.cursor/
-.cursorrules
-.aider*
-*.prompt
-*.chat
-*.conversation
-prompts/
-conversations/
 
 # Local data, examples, model artifacts, and experiment results
 /data/

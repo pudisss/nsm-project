@@ -28,22 +28,11 @@ runs/
 outputs/
 wandb/
 
-# Private documentation and AI assistant artifacts
+# Private documentation
 /.git-history-backup/
 *.md
 *.mdx
 *.markdown
-.agents/
-.claude/
-.codex/
-.cursor/
-.cursorrules
-.aider*
-*.prompt
-*.chat
-*.conversation
-prompts/
-conversations/
 
 # Research data, model artifacts, and evaluation output
 /model/data/
