@@ -29,6 +29,7 @@ outputs/
 wandb/
 
 # Private documentation and AI assistant artifacts
+/.git-history-backup/
 *.md
 *.mdx
 *.markdown

@@ -1,0 +1,116 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Model weights & checkpoints
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+
+# Data directories
+data/
+!src/data/
+src/data/*.csv
+!src/data/cross_architecture_train_manifest.csv
+!src/data/cross_architecture_test_manifest.csv
+!src/data/cross_architecture_full_test_manifest.csv
+datasets/
+*.zip
+*.7z*
+*.tar
+*.tar.gz
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs & outputs
+logs/
+runs/
+outputs/
+wandb/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# HuggingFace cache
+.cache/
+
+# Code-only publication: private notes and AI assistant artifacts
+*.md
+*.mdx
+*.markdown
+.agents/
+.claude/
+.codex/
+.cursor/
+.cursorrules
+.aider*
+*.prompt
+*.chat
+*.conversation
+prompts/
+conversations/
+
+# Local data, examples, model artifacts, and experiment results
+/data/
+/datasets/
+/checkpoints/
+/results/
+/eval_results/
+examples/
+metadata/
+*.csv
+*.tsv
+*.json
+*.jsonl
+*.db
+*.sqlite*
+*.xlsx
+*.xls
+*.pdf
+*.parquet
+*.arrow
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.h5
+*.onnx
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.wav
+*.mp3
+
+# Local credentials
+.env
+.env.*
+*.pem
+*.key

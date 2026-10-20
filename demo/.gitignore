@@ -1,0 +1,111 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Model weights are distributed separately through Google Drive.
+# Keep the checkpoint instructions tracked.
+checkpoints/*
+!checkpoints/README.md
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+
+# Local Gradio/runtime artifacts
+.gradio_tmp/
+flagged/
+logs/
+outputs/
+*.log
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Packaging/build output
+build/
+dist/
+
+# Downloaded archives
+*.zip
+*.7z
+*.tar
+*.tar.gz
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Code-only publication: private notes and AI assistant artifacts
+*.md
+*.mdx
+*.markdown
+.agents/
+.claude/
+.codex/
+.cursor/
+.cursorrules
+.aider*
+*.prompt
+*.chat
+*.conversation
+prompts/
+conversations/
+
+# Local data, examples, model artifacts, and experiment results
+/data/
+/datasets/
+/checkpoints/
+/results/
+/eval_results/
+examples/
+metadata/
+*.csv
+*.tsv
+*.json
+*.jsonl
+*.db
+*.sqlite*
+*.xlsx
+*.xls
+*.pdf
+*.parquet
+*.arrow
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.h5
+*.onnx
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.bmp
+*.tif
+*.tiff
+*.mp4
+*.mov
+*.wav
+*.mp3
